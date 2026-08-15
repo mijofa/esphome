@@ -829,13 +829,15 @@ void SpeakerSourceMediaPlayer::set_volume_(float volume, bool publish) {
     }
   }
 
-  // Turn on the mute state if the volume is effectively zero, off otherwise.
-  // Pass publish=false to avoid saving twice.
-  if (volume < 0.001f) {
-    this->set_mute_state_(true, false);
-  } else {
-    this->set_mute_state_(false, false);
-  }
+  // Volume & mute should be independent.
+  // ref: https://github.com/Sendspin/spec/blob/main/README.md#player-messages:~:text=volume%20and%20muted%20are%20independent%3A
+  // // Turn on the mute state if the volume is effectively zero, off otherwise.
+  // // Pass publish=false to avoid saving twice.
+  // if (volume < 0.001f) {
+  //   this->set_mute_state_(true, false);
+  // } else {
+  //   this->set_mute_state_(false, false);
+  // }
 
   // Save after mute mutation so the restored state has the correct is_muted_ value
   if (publish) {
