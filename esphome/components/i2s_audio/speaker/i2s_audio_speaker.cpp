@@ -149,7 +149,10 @@ void I2SAudioSpeakerBase::set_volume(float volume) {
     // Fallback to software volume control by using a Q31 fixed point scaling factor.
     // At maximum volume (1.0), set to INT32_MAX to bypass volume processing entirely
     // and avoid any floating-point precision issues that could cause slight volume reduction.
-    if (volume >= 1.0f) {
+    if (this->mute_state_) {
+      // We're muted, so ignore the incoming volume update
+      this->q31_volume_factor_ = 0;
+    } else if (volume >= 1.0f) {
       this->q31_volume_factor_ = INT32_MAX;
     } else if (volume <= 0.0f) {
       this->q31_volume_factor_ = 0;
